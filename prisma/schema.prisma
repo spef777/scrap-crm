@@ -1,0 +1,101 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id         String     @id @default(cuid())
+  email      String     @unique
+  name       String
+  password   String
+  role       String     @default("user")
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  suppliers  Supplier[]
+  activities Activity[]
+  deals      Deal[]
+}
+
+model Supplier {
+  id           String           @id @default(cuid())
+  name         String
+  phone        String
+  location     String
+  scrapTypes   String[]
+  quantity     String           @default("")
+  category     SupplierCategory @default(SMALL)
+  stage        Stage            @default(NEW_LEAD)
+  tags         String[]
+  notes        String?
+  aiScore      Float?
+  nextFollowUp DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  userId       String
+  user         User             @relation(fields: [userId], references: [id])
+  activities   Activity[]
+  deals        Deal[]
+}
+
+model Activity {
+  id           String    @id @default(cuid())
+  supplierId   String
+  supplier     Supplier  @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User      @relation(fields: [userId], references: [id])
+  date         DateTime  @default(now())
+  remarks      String
+  outcome      Outcome
+  followUpDate DateTime?
+  aiSummary    String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Deal {
+  id         String   @id @default(cuid())
+  supplierId String
+  supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  date       DateTime @default(now())
+  scrapType  String
+  quantity   Float
+  ratePerKg  Float
+  totalValue Float
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum SupplierCategory {
+  SMALL
+  MEDIUM
+  BULK
+}
+
+enum Stage {
+  NEW_LEAD
+  CONTACTED
+  FOLLOW_UP_NEEDED
+  INTERESTED
+  REGULAR_SUPPLIER
+  DEAL_FINALIZED
+  NOT_INTERESTED
+  INVALID_CONTACT
+}
+
+enum Outcome {
+  INTERESTED
+  NOT_INTERESTED
+  CALL_LATER
+  NO_ANSWER
+}
