@@ -11,15 +11,18 @@ export async function GET(req: NextRequest) {
   const todayEnd = new Date(now); todayEnd.setHours(23,59,59,999);
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  const [
-    totalSuppliers, todayFollowUps, overdueFollowUps,
-    monthDeals, todayDeals, stageBreakdown, topSuppliers
-  ] = await Promise.all([
+  // VERCEL / NEON OPTIMIZATION: 
+  // We run these in two smaller batches instead of one massive Promise.all
+  // to avoid starving the Vercel serverless database connection pool (max 5 concurrent).
+  const [totalSuppliers, monthDeals, todayDeals] = await Promise.all([
     prisma.supplier.count(),
-    prisma.supplier.count({ where: { nextFollowUp: { gte: todayStart, lte: todayEnd }, stage: { notIn: ["NOT_INTERESTED","INVALID_CONTACT"] } } }),
-    prisma.supplier.count({ where: { nextFollowUp: { lt: todayStart }, stage: { notIn: ["NOT_INTERESTED","INVALID_CONTACT"] } } }),
     prisma.deal.aggregate({ where: { date: { gte: monthStart } }, _sum: { totalValue: true, quantity: true }, _count: true }),
     prisma.deal.aggregate({ where: { date: { gte: todayStart } }, _sum: { totalValue: true }, _count: true }),
+  ]);
+
+  const [todayFollowUps, overdueFollowUps, stageBreakdown, topSuppliers] = await Promise.all([
+    prisma.supplier.count({ where: { nextFollowUp: { gte: todayStart, lte: todayEnd }, stage: { notIn: ["NOT_INTERESTED","INVALID_CONTACT"] } } }),
+    prisma.supplier.count({ where: { nextFollowUp: { lt: todayStart }, stage: { notIn: ["NOT_INTERESTED","INVALID_CONTACT"] } } }),
     prisma.supplier.groupBy({ by: ["stage"], _count: true }),
     prisma.supplier.findMany({
       where: { deals: { some: {} } },
