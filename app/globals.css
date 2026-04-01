@@ -31,33 +31,33 @@
 }
 
 .dark {
-  --bg-primary: #000000;
-  --bg-secondary: #1c1c1e;
-  --bg-card: #1c1c1e;
-  --bg-hover: #2c2c2e;
-  --border: #38383a;
-  --border-light: #2c2c2e;
-  --text-primary: #f5f5f7;
-  --text-secondary: #98989d;
-  --text-muted: #636366;
-  --accent: #0a84ff;
-  --accent-hover: #007aff;
-  --accent-light: rgba(10, 132, 255, 0.15);
-  --success: #32d74b;
-  --warning: #ff9f0a;
-  --danger: #ff453a;
-  --info: #64d2ff;
-  --purple: #bf5af2;
-  --glass-bg: rgba(28, 28, 30, 0.85);
-  --glass-sidebar: rgba(28, 28, 30, 0.75);
-  --shadow-color: rgba(0,0,0,0.3);
-  --shadow-strong: rgba(0,0,0,0.5);
-  --border-subtle: rgba(255,255,255,0.1);
-  --highlight-subtle: rgba(255,255,255,0.05);
-  --btn-secondary-bg: #1c1c1e;
-  --btn-secondary-hover: #2c2c2e;
-  --table-header: #1c1c1e;
-  --toast-bg: rgba(28, 28, 30, 0.9);
+  --bg-primary: #000000;          /* Black background */
+  --bg-secondary: #0f0f12;        /* Very dark grey (sidebar) */
+  --bg-card: #18181b;             /* Dark grey (cards) */
+  --bg-hover: #27272a;            /* Normal grey (hover) */
+  --border: #3f3f46;              /* Border grey */
+  --border-light: #27272a;        /* Subtle border */
+  --text-primary: #ffffff;        /* Pure white for max visibility */
+  --text-secondary: #a1a1aa;      /* Light grey for secondary text */
+  --text-muted: #71717a;          /* Muted grey */
+  --accent: #3b82f6;              /* Vibrant Blue Accent */
+  --accent-hover: #60a5fa;        /* Lighter Blue for hover */
+  --accent-light: rgba(59, 130, 246, 0.15);
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #38bdf8;
+  --purple: #a855f7;
+  --glass-bg: rgba(24, 24, 27, 0.85);
+  --glass-sidebar: rgba(15, 15, 18, 0.8);
+  --shadow-color: rgba(0,0,0,0.5);
+  --shadow-strong: rgba(0,0,0,0.7);
+  --border-subtle: rgba(255,255,255,0.12);
+  --highlight-subtle: rgba(255,255,255,0.08);
+  --btn-secondary-bg: #18181b;
+  --btn-secondary-hover: #27272a;
+  --table-header: #18181b;
+  --toast-bg: rgba(24, 24, 27, 0.95);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
