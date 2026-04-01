@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session || !session.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const data = await req.json();
   const supplier = await prisma.supplier.create({
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       stage: data.stage || "NEW_LEAD",
       tags: data.tags || [],
       notes: data.notes || "",
-      userId: session.user.id!,
+      userId: session.user.id,
     },
   });
 

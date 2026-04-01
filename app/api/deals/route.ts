@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session || !session.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const data = await req.json();
   const totalValue = data.quantity * data.ratePerKg;
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   const deal = await prisma.deal.create({
     data: {
       supplierId: data.supplierId,
-      userId: session.user.id!,
+      userId: session.user.id,
       date: data.date ? new Date(data.date) : new Date(),
       scrapType: data.scrapType,
       quantity: parseFloat(data.quantity),
