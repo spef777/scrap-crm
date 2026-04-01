@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const supplier = await prisma.supplier.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       activities: { orderBy: { date: "desc" } },
       deals: { orderBy: { date: "desc" } },
@@ -23,13 +24,14 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   return NextResponse.json({ ...supplier, totalDealValue, totalQuantity });
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const data = await req.json();
   const supplier = await prisma.supplier.update({
-    where: { id: params.id },
+    where: { id },
     data: {
       name: data.name,
       phone: data.phone,
@@ -47,10 +49,11 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   return NextResponse.json(supplier);
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  await prisma.supplier.delete({ where: { id: params.id } });
+  await prisma.supplier.delete({ where: { id } });
   return NextResponse.json({ ok: true });
 }
