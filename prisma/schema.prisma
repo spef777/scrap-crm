@@ -43,6 +43,10 @@ model Supplier {
   user         User             @relation(fields: [userId], references: [id])
   activities   Activity[]
   deals        Deal[]
+
+  @@index([nextFollowUp])
+  @@index([stage])
+  @@index([createdAt])
 }
 
 model Activity {
@@ -58,6 +62,9 @@ model Activity {
   aiSummary    String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+
+  @@index([date])
+  @@index([supplierId])
 }
 
 model Deal {
@@ -74,6 +81,9 @@ model Deal {
   notes      String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@index([date])
+  @@index([supplierId])
 }
 
 enum SupplierCategory {
