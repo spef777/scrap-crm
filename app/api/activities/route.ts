@@ -20,13 +20,13 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session || !session.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const data = await req.json();
   const activity = await prisma.activity.create({
     data: {
       supplierId: data.supplierId,
-      userId: session.user.id!,
+      userId: session.user.id,
       remarks: data.remarks,
       outcome: data.outcome,
       followUpDate: data.followUpDate ? new Date(data.followUpDate) : null,
