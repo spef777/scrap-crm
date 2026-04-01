@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { 
   LayoutDashboard, Users, GitBranch, Calendar, TrendingUp, 
-  Upload, Search, LogOut, Menu, X, Bell, PhoneCall
+  Upload, Search, LogOut, Menu, X, Bell, PhoneCall, Settings
 } from "lucide-react";
 
 const navItems = [
@@ -77,8 +77,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         <div className="divider" />
 
+        {/* Settings */}
+        <div style={{ padding:"0.5rem 0.5rem 0" }}>
+          <Link href="/settings" className={`nav-item ${isActive('/settings') ? 'active' : ''}`} onClick={()=>setSidebarOpen(false)}>
+            <Settings size={18} /> Settings
+          </Link>
+        </div>
+
         {/* User */}
-        <div style={{ padding:"0.75rem 1rem" }}>
+        <div style={{ padding:"0.5rem 1rem 0.75rem" }}>
           <div style={{ display:"flex", alignItems:"center", gap:"0.625rem", marginBottom:"0.75rem" }}>
             <div style={{ width:32, height:32, borderRadius:"50%", background:"var(--accent-light)", display:"flex", alignItems:"center", justifyContent:"center", color:"var(--accent)", fontWeight:700 }}>
               {session?.user?.name?.[0]?.toUpperCase() || "U"}
